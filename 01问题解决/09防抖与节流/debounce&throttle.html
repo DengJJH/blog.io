@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn1">防抖点击</button>
+    <button id="btn2">节流点击</button>
+    <script>
+      function debounce(fn, wait) {
+        let timer = null
+        return function (...args) {
+          if (timer) clearTimeout(timer) 
+          timer = setTimeout(() => {
+            fn.apply(this, args)
+          }, wait)
+        }
+      }
+  
+      function throttle(fn, wait) {
+        let lastTime = 0
+        return function (...args) {
+          let now = +new Date()
+          if (now - lastTime > wait) {
+            lastTime = now
+            fn.apply(this, args)
+          }
+        }
+      }
+  
+      function say() {
+        console.log('-------hello-------')
+      }
+  
+      document.getElementById('btn1').onclick = debounce(say, 2000)
+      document.getElementById('btn2').onclick = throttle(say, 2000)
+    </script>
+  </body>
+
+</html>

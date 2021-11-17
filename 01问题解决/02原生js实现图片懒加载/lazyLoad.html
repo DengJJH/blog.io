@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intersection</title>
+</head>
+<body>
+  <h2>图片列表</h1>
+    <ul>
+      <img src="img/time.gif" data-src="https://picsum.photos/200/300?random=3v" alt="">
+      <img src="img/time.gif" data-src="https://picsum.photos/seed/picsum/200/300" alt="">
+      <img src="img/time.gif" data-src="https://picsum.photos/200/300?random=3v" alt="">
+    </ul>
+</body>
+<script>
+    const root = document.getElementsByTagName('ul')[0]
+    const options = {
+          root: root,
+// 这里是一个数组可以指定多个比例类似[0.25, 0.5, 0.75, 1]
+          threshold: [0],//交会处 
+          rootMargin:"0px"//对视口进行收缩和扩张
+      }
+  const lazyIntersection = new IntersectionObserver(entires => {
+  // entires为监听的节点数组对象
+    entires.forEach((item,index) => {
+      console.log(item)
+      // console.log(item.target, item.isIntersecting? '可见': '不可见')
+// isIntersecting是当前监听元素交叉区域是否在可视区域指定的阈值内返回的是一个布尔值
+      if(item.isIntersecting) {
+        console.log('可见')
+        item.target.src = item.target.getAttribute('data-src')
+    // 这里资源加载后就停止进行观察
+        lazyIntersection.unobserve(item.target)
+      }
+      // console.log(item)
+    })
+  }, options)
+ // doucument.getElementsByTagName()获取的是一个元素DOM节点的伪数组，无法进行数组的遍历
+ // 我们可以使用Array.from()将伪数组转化为真数组进行数组操作
+  let data = Array.from(document.getElementsByTagName('img'))
+  data.forEach(item => {
+// observe用来观察指定的DOM节点
+     lazyIntersection.observe(item)
+  })
+</script>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    height: 1000px;
+    overflow-y: scroll;
+  }
+  ul li {
+    list-style: none;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  img {
+    min-height: 900px;
+  }
+</style>
+</html>
